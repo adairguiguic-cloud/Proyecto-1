@@ -19,44 +19,57 @@ namespace SistemaParqueo
             int entrada = 0;
 
             Console.WriteLine("=== SISTEMA DE PARQUEO ===");
+            Console.WriteLine("Ingrese los datos para iniciar el sistema.\n");
 
+            // OPERADOR
             do
             {
-                Console.Write("Operador: ");
+                Console.Write("Nombre del operador: ");
                 operador = Console.ReadLine().Trim();
-                if (operador == "") Console.WriteLine("Dato inválido.");
-            }
-            while (operador == "");
 
+                if (operador == "")
+                    Console.WriteLine("No puede dejarlo vacío.");
+
+            } while (operador == "");
+
+            // TURNO
             do
             {
-                Console.Write("Turno (4): ");
+                Console.Write("Turno (4 letras o numeros): ");
                 turno = Console.ReadLine().Trim();
-                if (turno.Length != 4) Console.WriteLine("Debe tener 4 caracteres.");
-            }
-            while (turno.Length != 4);
 
+                if (turno.Length != 4)
+                    Console.WriteLine("Debe tener 4 caracteres.");
+
+            } while (turno.Length != 4);
+
+            // CAPACIDAD
             do
             {
-                Console.Write("Capacidad (>=10): ");
+                Console.Write("Capacidad del parqueo (minimo 10): ");
+
                 if (int.TryParse(Console.ReadLine(), out capacidad))
                 {
-                    if (capacidad < 10) Console.WriteLine("Muy pequeña.");
+                    if (capacidad < 10)
+                        Console.WriteLine("Debe ser al menos 10.");
                 }
                 else
                 {
-                    Console.WriteLine("Número inválido.");
+                    Console.WriteLine("Ingrese un numero valido.");
                     capacidad = 0;
                 }
-            }
-            while (capacidad < 10);
+
+            } while (capacidad < 10);
+
+            Console.WriteLine("\nSistema listo. Use el menu.\n");
 
             int opcion;
 
             do
             {
                 Menu();
-                Console.Write("Opción: ");
+
+                Console.Write("Seleccione opcion: ");
 
                 if (int.TryParse(Console.ReadLine(), out opcion))
                 {
@@ -95,13 +108,13 @@ namespace SistemaParqueo
                             return;
 
                         default:
-                            Console.WriteLine("Opción inválida.");
+                            Console.WriteLine("Opcion no valida.");
                             break;
                     }
                 }
                 else
                 {
-                    Console.WriteLine("Ingrese número.");
+                    Console.WriteLine("Ingrese un numero.");
                 }
 
                 Console.WriteLine();
@@ -111,10 +124,11 @@ namespace SistemaParqueo
 
         static void Menu()
         {
-            Console.WriteLine("1. Entrada");
-            Console.WriteLine("2. Salida");
-            Console.WriteLine("3. Estado");
-            Console.WriteLine("4. Tiempo");
+            Console.WriteLine("----- MENU -----");
+            Console.WriteLine("1. Registrar entrada");
+            Console.WriteLine("2. Registrar salida");
+            Console.WriteLine("3. Ver estado");
+            Console.WriteLine("4. Avanzar tiempo");
             Console.WriteLine("5. Salir");
         }
 
@@ -129,15 +143,17 @@ namespace SistemaParqueo
                                 int capacidad,
                                 ref int tiempo)
         {
+            Console.WriteLine("\n--- ENTRADA ---");
+
             if (activo)
             {
-                Console.WriteLine("Ya hay ticket.");
+                Console.WriteLine("Ya hay un ticket activo.");
                 return;
             }
 
             if (ocupados >= capacidad)
             {
-                Console.WriteLine("Parqueo lleno.");
+                Console.WriteLine("El parqueo esta lleno.");
                 return;
             }
 
@@ -145,11 +161,11 @@ namespace SistemaParqueo
 
             do
             {
-                Console.Write("Placa: ");
+                Console.Write("Placa (6 a 8 caracteres): ");
                 p = Console.ReadLine().Trim().ToUpper();
 
                 if (p.Length < 6 || p.Length > 8 || p.Contains(" "))
-                    Console.WriteLine("Placa inválida.");
+                    Console.WriteLine("Placa incorrecta.");
 
             }
             while (p.Length < 6 || p.Length > 8 || p.Contains(" "));
@@ -158,17 +174,18 @@ namespace SistemaParqueo
 
             do
             {
+                Console.WriteLine("Tipo de vehiculo:");
                 Console.WriteLine("1 Moto");
                 Console.WriteLine("2 Auto");
                 Console.WriteLine("3 Pickup");
-                Console.Write("Tipo: ");
+                Console.Write("Seleccione tipo: ");
 
                 if (int.TryParse(Console.ReadLine(), out t))
                 {
                     if (t >= 1 && t <= 3) break;
                 }
 
-                Console.WriteLine("Dato inválido.");
+                Console.WriteLine("Tipo no valido.");
 
             } while (true);
 
@@ -176,10 +193,11 @@ namespace SistemaParqueo
 
             do
             {
-                Console.Write("Cliente: ");
+                Console.Write("Nombre del cliente: ");
                 nom = Console.ReadLine().Trim();
 
-                if (nom == "") Console.WriteLine("Vacío.");
+                if (nom == "")
+                    Console.WriteLine("No puede estar vacio.");
 
             }
             while (nom == "");
@@ -188,7 +206,7 @@ namespace SistemaParqueo
 
             do
             {
-                Console.Write("VIP s/n: ");
+                Console.Write("Es VIP? (s/n): ");
                 r = Console.ReadLine().Trim().ToLower();
 
                 if (r == "s" || r == "n") break;
@@ -207,10 +225,8 @@ namespace SistemaParqueo
             creados++;
             ocupados++;
 
-            Console.WriteLine("Ticket creado correctamente.");
-            Console.WriteLine("Placa: " + placa);
-            Console.WriteLine("Cliente: " + cliente);
-            Console.WriteLine("Entrada minuto: " + entrada);
+            Console.WriteLine("Ticket creado.");
+            Console.WriteLine("Entrada registrada en minuto: " + entrada);
         }
 
         static void RegistrarSalida(ref bool activo,
@@ -224,28 +240,35 @@ namespace SistemaParqueo
                                     ref int ocupados,
                                     ref int tiempo)
         {
+            Console.WriteLine("\n--- SALIDA ---");
+
             if (!activo)
             {
-                Console.WriteLine("No hay ticket.");
+                Console.WriteLine("No hay ticket activo.");
                 return;
             }
 
             int minutos = tiempo - entrada;
             int horas = (int)Math.Ceiling(minutos / 60.0);
 
-            decimal tarifa = tipo == 1 ? 5m : tipo == 2 ? 10m : 15m;
+            decimal tarifa = tipo == 1 ? 5m :
+                              tipo == 2 ? 10m : 15m;
+
             decimal basePago = horas * tarifa;
 
-            if (minutos <= 15) basePago = 0;
+            if (minutos <= 15)
+                basePago = 0;
 
-            if (minutos > 360) basePago += 25m;
+            if (minutos > 360)
+                basePago += 25m;
 
-            decimal pagoFinal = vip ? basePago * 0.9m : basePago;
+            decimal pagoFinal = vip ?
+                                basePago * 0.9m :
+                                basePago;
 
-            Console.WriteLine("Minutos estacionados: " + minutos);
+            Console.WriteLine("Minutos: " + minutos);
             Console.WriteLine("Horas cobradas: " + horas);
-            Console.WriteLine("Tarifa por hora: Q" + tarifa);
-            Console.WriteLine("Monto final: Q" + pagoFinal);
+            Console.WriteLine("Total a pagar: Q" + pagoFinal);
 
             total += pagoFinal;
             cerrados++;
@@ -269,40 +292,46 @@ namespace SistemaParqueo
                                   string placa,
                                   string cliente)
         {
+            Console.WriteLine("\n--- ESTADO ---");
+
             Console.WriteLine("Capacidad: " + capacidad);
             Console.WriteLine("Ocupados: " + ocupados);
             Console.WriteLine("Libres: " + (capacidad - ocupados));
-            Console.WriteLine("Tiempo: " + tiempo);
-            Console.WriteLine("Recaudado: Q" + total);
-            Console.WriteLine("Creados: " + creados);
-            Console.WriteLine("Cerrados: " + cerrados);
+            Console.WriteLine("Tiempo actual: " + tiempo);
+            Console.WriteLine("Total recaudado: Q" + total);
+            Console.WriteLine("Tickets creados: " + creados);
+            Console.WriteLine("Tickets cerrados: " + cerrados);
 
             if (activo)
                 Console.WriteLine("Activo: " + placa + " " + cliente);
             else
-                Console.WriteLine("Sin ticket.");
+                Console.WriteLine("No hay ticket activo.");
         }
 
         static void AvanzarTiempo(ref int tiempo)
         {
+            Console.WriteLine("\n--- AVANZAR TIEMPO ---");
+
             int min;
 
             do
             {
-                Console.Write("Minutos: ");
+                Console.Write("Minutos a avanzar: ");
 
                 if (int.TryParse(Console.ReadLine(), out min))
                 {
                     if (min >= 1 && min <= 1440)
                     {
                         tiempo += min;
+
                         Console.WriteLine("Tiempo actualizado.");
                         Console.WriteLine("Tiempo total: " + tiempo);
+
                         return;
                     }
                 }
 
-                Console.WriteLine("Valor inválido.");
+                Console.WriteLine("Valor incorrecto.");
 
             } while (true);
         }
@@ -316,15 +345,18 @@ namespace SistemaParqueo
                                  int creados,
                                  int cerrados)
         {
-            Console.WriteLine("=== RESUMEN ===");
+            Console.WriteLine("\n=== RESUMEN FINAL ===");
+
             Console.WriteLine("Operador: " + operador);
             Console.WriteLine("Turno: " + turno);
             Console.WriteLine("Capacidad: " + capacidad);
             Console.WriteLine("Ocupados: " + ocupados);
-            Console.WriteLine("Tiempo: " + tiempo);
+            Console.WriteLine("Tiempo total: " + tiempo);
             Console.WriteLine("Tickets creados: " + creados);
             Console.WriteLine("Tickets cerrados: " + cerrados);
             Console.WriteLine("Total recaudado: Q" + total);
+
+            Console.WriteLine("\nFin del programa.");
         }
     }
 }
