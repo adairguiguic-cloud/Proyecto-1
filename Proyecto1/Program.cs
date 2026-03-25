@@ -18,7 +18,10 @@ namespace SistemaParqueo
             bool vip = false;
             int entrada = 0;
 
+            Console.ForegroundColor = ConsoleColor.Gray;
             Console.WriteLine("=== SISTEMA DE PARQUEO ===");
+            Console.ResetColor();
+
             Console.WriteLine("Ingrese los datos para iniciar el sistema.\n");
 
             // OPERADOR
@@ -28,7 +31,11 @@ namespace SistemaParqueo
                 operador = Console.ReadLine().Trim();
 
                 if (operador == "")
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine("No puede dejarlo vacío.");
+                    Console.ResetColor();
+                }
 
             } while (operador == "");
 
@@ -39,7 +46,11 @@ namespace SistemaParqueo
                 turno = Console.ReadLine().Trim();
 
                 if (turno.Length != 4)
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine("Debe tener 4 caracteres.");
+                    Console.ResetColor();
+                }
 
             } while (turno.Length != 4);
 
@@ -51,17 +62,25 @@ namespace SistemaParqueo
                 if (int.TryParse(Console.ReadLine(), out capacidad))
                 {
                     if (capacidad < 10)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
                         Console.WriteLine("Debe ser al menos 10.");
+                        Console.ResetColor();
+                    }
                 }
                 else
                 {
+                    Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine("Ingrese un numero valido.");
+                    Console.ResetColor();
                     capacidad = 0;
                 }
 
             } while (capacidad < 10);
 
+            Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("\nSistema listo. Use el menu.\n");
+            Console.ResetColor();
 
             int opcion;
 
@@ -108,13 +127,17 @@ namespace SistemaParqueo
                             return;
 
                         default:
+                            Console.ForegroundColor = ConsoleColor.Red;
                             Console.WriteLine("Opcion no valida.");
+                            Console.ResetColor();
                             break;
                     }
                 }
                 else
                 {
+                    Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine("Ingrese un numero.");
+                    Console.ResetColor();
                 }
 
                 Console.WriteLine();
@@ -124,12 +147,16 @@ namespace SistemaParqueo
 
         static void Menu()
         {
+            Console.ForegroundColor = ConsoleColor.Cyan;
+
             Console.WriteLine("----- MENU -----");
             Console.WriteLine("1. Registrar entrada");
             Console.WriteLine("2. Registrar salida");
             Console.WriteLine("3. Ver estado");
             Console.WriteLine("4. Avanzar tiempo");
             Console.WriteLine("5. Salir");
+
+            Console.ResetColor();
         }
 
         static void CrearTicket(ref bool activo,
@@ -143,17 +170,23 @@ namespace SistemaParqueo
                                 int capacidad,
                                 ref int tiempo)
         {
+            Console.ForegroundColor = ConsoleColor.Gray;
             Console.WriteLine("\n--- ENTRADA ---");
+            Console.ResetColor();
 
             if (activo)
             {
+                Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("Ya hay un ticket activo.");
+                Console.ResetColor();
                 return;
             }
 
             if (ocupados >= capacidad)
             {
+                Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("El parqueo esta lleno.");
+                Console.ResetColor();
                 return;
             }
 
@@ -165,7 +198,11 @@ namespace SistemaParqueo
                 p = Console.ReadLine().Trim().ToUpper();
 
                 if (p.Length < 6 || p.Length > 8 || p.Contains(" "))
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine("Placa incorrecta.");
+                    Console.ResetColor();
+                }
 
             }
             while (p.Length < 6 || p.Length > 8 || p.Contains(" "));
@@ -185,7 +222,9 @@ namespace SistemaParqueo
                     if (t >= 1 && t <= 3) break;
                 }
 
+                Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("Tipo no valido.");
+                Console.ResetColor();
 
             } while (true);
 
@@ -197,7 +236,11 @@ namespace SistemaParqueo
                 nom = Console.ReadLine().Trim();
 
                 if (nom == "")
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine("No puede estar vacio.");
+                    Console.ResetColor();
+                }
 
             }
             while (nom == "");
@@ -211,7 +254,9 @@ namespace SistemaParqueo
 
                 if (r == "s" || r == "n") break;
 
+                Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("Solo s o n.");
+                Console.ResetColor();
 
             }
             while (true);
@@ -225,8 +270,10 @@ namespace SistemaParqueo
             creados++;
             ocupados++;
 
+            Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("Ticket creado.");
             Console.WriteLine("Entrada registrada en minuto: " + entrada);
+            Console.ResetColor();
         }
 
         static void RegistrarSalida(ref bool activo,
@@ -240,11 +287,15 @@ namespace SistemaParqueo
                                     ref int ocupados,
                                     ref int tiempo)
         {
+            Console.ForegroundColor = ConsoleColor.Gray;
             Console.WriteLine("\n--- SALIDA ---");
+            Console.ResetColor();
 
             if (!activo)
             {
+                Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("No hay ticket activo.");
+                Console.ResetColor();
                 return;
             }
 
@@ -262,13 +313,13 @@ namespace SistemaParqueo
             if (minutos > 360)
                 basePago += 25m;
 
-            decimal pagoFinal = vip ?
-                                basePago * 0.9m :
-                                basePago;
+            decimal pagoFinal = vip ? basePago * 0.9m : basePago;
 
+            Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine("Minutos: " + minutos);
             Console.WriteLine("Horas cobradas: " + horas);
             Console.WriteLine("Total a pagar: Q" + pagoFinal);
+            Console.ResetColor();
 
             total += pagoFinal;
             cerrados++;
@@ -280,6 +331,10 @@ namespace SistemaParqueo
             tipo = 0;
             vip = false;
             entrada = 0;
+
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("Salida registrada correctamente.");
+            Console.ResetColor();
         }
 
         static void MostrarEstado(int capacidad,
@@ -292,6 +347,7 @@ namespace SistemaParqueo
                                   string placa,
                                   string cliente)
         {
+            Console.ForegroundColor = ConsoleColor.Gray;
             Console.WriteLine("\n--- ESTADO ---");
 
             Console.WriteLine("Capacidad: " + capacidad);
@@ -306,11 +362,15 @@ namespace SistemaParqueo
                 Console.WriteLine("Activo: " + placa + " " + cliente);
             else
                 Console.WriteLine("No hay ticket activo.");
+
+            Console.ResetColor();
         }
 
         static void AvanzarTiempo(ref int tiempo)
         {
+            Console.ForegroundColor = ConsoleColor.Gray;
             Console.WriteLine("\n--- AVANZAR TIEMPO ---");
+            Console.ResetColor();
 
             int min;
 
@@ -324,14 +384,18 @@ namespace SistemaParqueo
                     {
                         tiempo += min;
 
+                        Console.ForegroundColor = ConsoleColor.Green;
                         Console.WriteLine("Tiempo actualizado.");
                         Console.WriteLine("Tiempo total: " + tiempo);
+                        Console.ResetColor();
 
                         return;
                     }
                 }
 
+                Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("Valor incorrecto.");
+                Console.ResetColor();
 
             } while (true);
         }
@@ -345,6 +409,7 @@ namespace SistemaParqueo
                                  int creados,
                                  int cerrados)
         {
+            Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("\n=== RESUMEN FINAL ===");
 
             Console.WriteLine("Operador: " + operador);
@@ -357,6 +422,7 @@ namespace SistemaParqueo
             Console.WriteLine("Total recaudado: Q" + total);
 
             Console.WriteLine("\nFin del programa.");
+            Console.ResetColor();
         }
     }
 }
